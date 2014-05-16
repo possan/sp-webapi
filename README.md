@@ -1,25 +1,25 @@
-Commandline WebAPI Interface
-----------------------------
+Commandline interface to the Spotify WebAPI
+-------------------------------------------
 
 
 Syntax:
 
-	spapi [command] {arguments ...}
+	sp-webapi [command] {arguments ...}
 
 Examples:
 
-	spapi authorize
+	sp-webapi authorize
 		Request access with default scopes
 
-	spapi authorize user-read-email,playlist-read
+	sp-webapi authorize user-read-email,playlist-read
 		Request access with a specific set of scopes
 
-	spapi refresh
+	sp-webapi refresh
 		Refresh access token using last refresh token
 
-	spapi curl https://api.spotify.com/v1/me
+	sp-webapi curl https://api.spotify.com/v1/me
 		Get information about the currently authenticated user
 
-	spapi curl /users/{username}/playlists
+	sp-webapi curl /users/{username}/playlists
 		Get a list of a users playlists
 

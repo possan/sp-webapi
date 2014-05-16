@@ -68,7 +68,7 @@ function setLastRerfreshToken(refreshToken) {
 }
 
 function syntax() {
-	console.log('SPAPI - Commandline WebAPI Interface.');
+	console.log('Commandline interface to the Spotify WebAPI');
 	console.log('');
 	console.log('Syntax:');
 	console.log('\tspapi [command] {arguments ...}');

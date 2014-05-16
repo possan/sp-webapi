@@ -1,0 +1,25 @@
+{
+  "name": "sp-webapi",
+  "version": "0.1.0",
+  "description": "Commandline Spotify WebAPI Interface",
+  "author": {
+    "name": "Per-Olov Jernberg",
+    "email": "possan@possan.se"
+  },
+  "main": "./bin/sp-webapi.js",
+  "dependencies": {
+    "restler": "~3.2.2"
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "sp-webapi": "./bin/sp-webapi.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@ghe.spotify.net:doozer/sp-webapi.git"
+  }
+}
