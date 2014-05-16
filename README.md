@@ -1,10 +1,13 @@
 Commandline WebAPI Interface
 ----------------------------
 
+
 Syntax:
+
 	spapi [command] {arguments ...}
 
 Examples:
+
 	spapi authorize
 		Request access with default scopes
 
