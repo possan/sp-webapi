@@ -1,10 +1,15 @@
 Commandline interface to the Spotify WebAPI
 -------------------------------------------
 
+Installation:
+
+	npm install -g git+https://github.com/possan/sp-webapi.git
+
 
 Syntax:
 
 	sp-webapi [command] {arguments ...}
+
 
 Examples:
 

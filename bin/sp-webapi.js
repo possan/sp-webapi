@@ -16,7 +16,7 @@ function getUserHome() {
 	return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 }
 
-var CONFIG_FILE =  getUserHome() + '/.spapi';
+var CONFIG_FILE =  getUserHome() + '/.sp-webapi';
 var CLIENT_ID = 'c614fc4ada15410b8fe5823530e92052';
 var CLIENT_SECRET = '793a48ce04af4a8f8ab8e2911e199a01';
 var PORT = 34567;
@@ -71,22 +71,22 @@ function syntax() {
 	console.log('Commandline interface to the Spotify WebAPI');
 	console.log('');
 	console.log('Syntax:');
-	console.log('\tspapi [command] {arguments ...}');
+	console.log('\tsp-webapi [command] {arguments ...}');
 	console.log('');
 	console.log('Examples:');
-	console.log('\tspapi authorize');
+	console.log('\tsp-webapi authorize');
 	console.log('\t\tRequest access with default scopes');
 	console.log('');
-	console.log('\tspapi authorize user-read-email,playlist-read');
+	console.log('\tsp-webapi authorize user-read-email,playlist-read');
 	console.log('\t\tRequest access with a specific set of scopes');
 	console.log('');
-	console.log('\tspapi refresh');
+	console.log('\tsp-webapi refresh');
 	console.log('\t\tRefresh access token using last refresh token');
 	console.log('');
-	console.log('\tspapi curl https://api.spotify.com/v1/me');
+	console.log('\tsp-webapi curl https://api.spotify.com/v1/me');
 	console.log('\t\tGet information about the currently authenticated user');
 	console.log('');
-	console.log('\tspapi curl /users/{username}/playlists');
+	console.log('\tsp-webapi curl /users/{username}/playlists');
 	console.log('\t\tGet a list of a users playlists');
 	console.log('');
 }
@@ -99,8 +99,6 @@ function getLoginURL(scopes) {
 }
 
 function getAccessToken(authorization_code, callback) {
-	// console.log('Exchange authorization code for access-/refresh-tokens');
-	// console.log('Authorization code: ' + authorization_code);
 	restler.post('https://accounts.spotify.com/api/token', {
 		data: {
 			'grant_type': 'authorization_code',
@@ -112,15 +110,11 @@ function getAccessToken(authorization_code, callback) {
 				+ new Buffer(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64')
 		}
 	}).on('complete', function(data) {
-		// var data2 = JSON.parse(data);
-		// console.log('posten klar', data);
 		callback(data.access_token, data.refresh_token);
 	});
 }
 
 function refreshAccessToken(refresh_token, callback) {
-	// console.log('Exchange authorization code for access-/refresh-tokens');
-	// console.log('Authorization code: ' + authorization_code);
 	restler.post('https://accounts.spotify.com/api/token', {
 		data: {
 			'grant_type': 'refresh_token',
@@ -131,8 +125,6 @@ function refreshAccessToken(refresh_token, callback) {
 				+ new Buffer(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64')
 		}
 	}).on('complete', function(data) {
-		// var data2 = JSON.parse(data);
-		// console.log('posten klar', data);
 		callback(data.access_token);
 	});
 }
@@ -140,9 +132,7 @@ function refreshAccessToken(refresh_token, callback) {
 function startLoginServer(codecallback) {
 	var server = http.createServer(function (req, res) {
 		var url_request = url.parse(req.url).query;
-		// console.log('url_request', url_request);
 		var query = querystring.parse(url_request);
-		// console.log('got query', query);
 		if (query && query.code) {
 			codecallback(query.code);
 			res.writeHead(200, {'Content-Type': 'text/html'});
@@ -161,10 +151,7 @@ function startLoginProcess(scopes, accesscallback) {
 	var url = getLoginURL(scopes);
 	var open = spawn('open', [url]);
 	startLoginServer(function(code) {
-		// console.log('got auth code', code);
 		getAccessToken(code, function(accessToken, refreshToken) {
-			// console.log('got access token', accessToken);
-			// console.log('got refresh token', refreshToken);
 			setLastAccessToken(accessToken);
 			setLastRerfreshToken(refreshToken);
 			accesscallback(accessToken);
@@ -187,7 +174,7 @@ function authCommand(args) {
 		console.log('\tcurl -H \'Authorization: Bearer ' + access_token + '\' https://api.spotify.com/v1/me');
 		console.log();
 		console.log('Or:');
-		console.log('\tspapi curl https://api.spotify.com/v1/me');
+		console.log('\tsp-webapi curl https://api.spotify.com/v1/me');
 		console.log();
 		process.exit();
 	});
@@ -209,7 +196,7 @@ function refreshCommand() {
 			console.log('\tcurl -H \'Authorization: Bearer ' + access_token + '\' https://api.spotify.com/v1/me');
 			console.log();
 			console.log('Or:');
-			console.log('\tspapi curl https://api.spotify.com/v1/me');
+			console.log('\tsp-webapi curl https://api.spotify.com/v1/me');
 			console.log();
 		});
 	}
@@ -241,11 +228,9 @@ function curlCommand(args) {
 	newargs[newargs.length - 1] = transformed;
 
 	var curl = child_process.spawn('curl', newargs, function (error, stdout, stderr) {
-	    console.log('stdout: ' + stdout);
-	    console.log('stderr: ' + stderr);
-	    if (error !== null) {
-	      console.log('exec error: ' + error);
-	    }
+		if (error !== null) {
+			console.error(error);
+		}
 	});
 
 	curl.stdout.on('data', function (data) {
